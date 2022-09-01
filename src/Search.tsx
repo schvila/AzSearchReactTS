@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, KeyboardEvent } from "react";
+
 import "./App.css";
 // const Results = ({fullresults})=>{
 //  return null;  
@@ -6,13 +7,16 @@ import "./App.css";
 const Search = () => {
   const [searchtext, setSearchtext] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  const [showresult, setShowresult] = useState(false);
   //const [results, setResults] = useState([]);
   console.log({
     render: suggestions,
   });
+  console.log({viewresult: showresult})
   const onSuggestHandler = (text: string) => {
-    setSearchtext(text);
+    setSearchtext(`"${text}"`);
     setSuggestions([]);
+    searchAZ(`"${text}"`);
   };
 
   const updateQueryTerm = debounce((qstring: string): void => {
@@ -33,7 +37,7 @@ const Search = () => {
     //await setSuggestions([]);
     console.log("after clear", suggestions);
     let qbody = JSON.stringify({
-      queryType: "full",
+      queryType: "simple",
       count: true,
       top: 10,
       search: `/.*${term}.*/`,
@@ -56,15 +60,24 @@ const Search = () => {
       return item.documentname;
     });
     console.log(docNames);
-    console.log("before", suggestions);
+
+    console.log({before: suggestions});
+    console.log({viewresult: showresult})
     setSuggestions(docNames);
-    console.log("after", suggestions);
+    console.log({after: suggestions});
   };
 
   const onInputChanged = (event: any ) =>{
     const val = event.target.value;
     setSearchtext(val);
+    setShowresult(false);
     updateQueryTerm(val);
+  }
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+    if(e.key === 'Enter'){
+      console.log('Enter pressed');
+      setShowresult(true);
+    }
   }
   return (
     <div className="container">
@@ -77,6 +90,7 @@ const Search = () => {
           style={{ marginTop: 10 }}
           onChange={onInputChanged}
           value={searchtext}
+          onKeyPress={handleKeyPress}
           />
         { suggestions.map((documentname: string, index: number) => (
             <div
