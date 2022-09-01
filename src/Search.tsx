@@ -1,18 +1,22 @@
 import React, { useState } from "react";
 import "./App.css";
-
+// const Results = ({fullresults})=>{
+//  return null;  
+// }
 const Search = () => {
-  //const [term, setTerm] = useState("");
+  const [searchtext, setSearchtext] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-console.log({render:suggestions});
+  //const [results, setResults] = useState([]);
+  console.log({
+    render: suggestions,
+  });
   const onSuggestHandler = (text: string) => {
-    //setText(text);
+    setSearchtext(text);
     setSuggestions([]);
   };
 
-  const updateQueryTerm = debounce((term: string): void => {
-    setSuggestions([]);
-    searchAZ(term);
+  const updateQueryTerm = debounce((qstring: string): void => {
+    searchAZ(qstring);
   });
 
   function debounce(func: any, timeout = 1000) {
@@ -24,7 +28,7 @@ console.log({render:suggestions});
       }, timeout);
     };
   }
-  //useEffect(() => {
+
   const searchAZ = async (term: string) => {
     //await setSuggestions([]);
     console.log("after clear", suggestions);
@@ -56,25 +60,25 @@ console.log({render:suggestions});
     setSuggestions(docNames);
     console.log("after", suggestions);
   };
-  // if (term) {
-  //   searchAZ(term);
-  // }
-  //}, [term]);
 
+  const onInputChanged = (event: any ) =>{
+    const val = event.target.value;
+    setSearchtext(val);
+    updateQueryTerm(val);
+  }
   return (
     <div className="container">
-      <>
         <label>Search Term</label>
         <br />
         <input
-          id="SearchInput"
+          id='az_search_input'
           type="text"
-          className="col-md-10 input"
-          onChange={(e) => updateQueryTerm(e.target.value)}
-          // value = {term}
-        />
-        {suggestions &&
-          suggestions.map((documentname: string, index: number) => (
+          className="col-md-12 input"
+          style={{ marginTop: 10 }}
+          onChange={onInputChanged}
+          value={searchtext}
+          />
+        { suggestions.map((documentname: string, index: number) => (
             <div
               key={index}
               className="suggestion col-md-12 justify-content-md-center"
@@ -83,7 +87,7 @@ console.log({render:suggestions});
               {documentname}
             </div>
           ))}
-      </>
+          {/* <Results fullresult={result} /> */}
     </div>
   );
 };
