@@ -37,7 +37,7 @@ const Search = () => {
     //await setSuggestions([]);
     console.log("after clear", suggestions);
     let qbody = JSON.stringify({
-      queryType: "simple",
+      queryType: "full",
       count: true,
       top: 10,
       search: `/.*${term}.*/`,

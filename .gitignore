@@ -25,3 +25,7 @@ yarn.lock
 package-lock.json
 
 
+
+# JetBrains Rider
+.idea/
+*.sln.iml
