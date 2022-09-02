@@ -48,7 +48,7 @@ const Search = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "api-key": "76AF4AE4C1993685E45276275282D949",
+          "api-key": "1B09FB11B19CAD26815E39FCA2154CC5",
         },
         body: qbody,
       }
