@@ -2,15 +2,26 @@
 //import logo from './logo.svg';
 //import './App.css';
 import Search from './Search';
-import FreeSoloCreateOptionDialog from './FreeSoloCreateOptionDialog';
+import SearchAsync from './SearchAsync';
+import { Grid } from '@material-ui/core';
 function App() {
   return (
-    <div className="App">
-        <div>
+    <Grid
+      container
+      justify='center'
+      alignItems='center'
+      direction='column'
+      style={{minHeight: '100vh'}}
+      spacing={5}
+    >
+        <Grid item>
+          <SearchAsync />
+          <p>Any text will do.</p>
+        </Grid>
+        <Grid item>
           <Search />
-          <FreeSoloCreateOptionDialog />
-        </div>
-    </div>
+        </Grid>
+   </Grid>
   );
 }
 

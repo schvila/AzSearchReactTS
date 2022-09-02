@@ -24,7 +24,7 @@ const SearchAsync: React.FC<Props> = () => {
 
   const fetchOptions = async (inputValue: any) => {
     let qbody = JSON.stringify({
-      queryType: "simple",
+      queryType: "full",
       count: true,
       top: 10,
       search: `/.*${inputValue}.*/`,
@@ -56,6 +56,7 @@ const SearchAsync: React.FC<Props> = () => {
 
 	return (
     <Autocomplete
+    sx={{ display: 'flex', width:200 }}
       renderInput={
         (params) => <TextField {...params} label="Search" variant="outlined" />
       }
