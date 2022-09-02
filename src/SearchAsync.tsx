@@ -1,5 +1,6 @@
-import React from 'react';
-import {Autocomplete, Box, Grid, TextField} from "@mui/material";
+import React, { useRef } from "react";
+import { Autocomplete, Box, Grid, TextField } from "@mui/material";
+import { throttle } from "lodash";
 
 type BaseProps = {};
 
@@ -18,7 +19,7 @@ function debounce(func: any, timeout = 1000) {
 }
 
 const SearchAsync: React.FC<Props> = () => {
-  const [inputValue, setInputValue] = React.useState('');
+  const [inputValue, setInputValue] = React.useState("");
   const [value, setValue] = React.useState<any>(undefined);
   const [options, setOptions] = React.useState<any>([]);
 
@@ -46,20 +47,25 @@ const SearchAsync: React.FC<Props> = () => {
       return item.documentname;
     });
     setOptions(docNames);
-  }
+  };
 
   const debounceFetchOptions = debounce(fetchOptions);
+  const throttled = useRef(
+    throttle((newValue) => console.log({ throtled: newValue }), 5000)
+  );
 
   React.useEffect(() => {
-    debounceFetchOptions(inputValue);
-  }, [inputValue, value])
+    //debounceFetchOptions(inputValue);
+    console.log("try call trotle.");
+    throttled.current(inputValue);
+  }, [inputValue, value]);
 
-	return (
+  return (
     <Autocomplete
-    sx={{ display: 'flex', width:200 }}
-      renderInput={
-        (params) => <TextField {...params} label="Search" variant="outlined" />
-      }
+      sx={{ display: "flex", width: 200 }}
+      renderInput={(params) => (
+        <TextField {...params} label="Search" variant="outlined" />
+      )}
       options={options}
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);
@@ -67,7 +73,7 @@ const SearchAsync: React.FC<Props> = () => {
       onChange={(event, newValue) => {
         setValue(newValue);
       }}
-      value={ value }
+      value={value}
       filterOptions={(x) => x}
       autoComplete
       includeInputInList
@@ -77,19 +83,17 @@ const SearchAsync: React.FC<Props> = () => {
           <li {...props}>
             <Grid container alignItems="center">
               <Grid item>
-                <Box
-                  sx={{ color: 'text.secondary', mr: 2 }}
-                />
+                <Box sx={{ color: "text.secondary", mr: 2 }} />
               </Grid>
               <Grid item xs>
-                { option }
+                {option}
               </Grid>
             </Grid>
           </li>
-        )
+        );
       }}
     />
   );
-}
+};
 
 export default SearchAsync as React.ComponentType<BaseProps>;
