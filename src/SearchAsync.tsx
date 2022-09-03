@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { Autocomplete, Box, Grid, TextField } from "@mui/material";
 import { throttle } from "lodash";
 
@@ -17,17 +17,13 @@ type Props = BaseProps & InjectedProps;
 //     }, timeout);
 //   };
 // }
-function throttled(val: string) {
-  throttle((val) => {
-    console.log("vola se to vubec");
-  }, 200); //, {leading: true}
-}
 const SearchAsync: React.FC<Props> = () => {
-  const [inputValue, setInputValue] = React.useState("");
   const [value, setValue] = React.useState<any>(undefined);
   const [options, setOptions] = React.useState<any>([]);
 
   const fetchOptions = async (inputValue: any) => {
+    console.log(`searching for -${inputValue}-`);
+
     let qbody = JSON.stringify({
       queryType: "full",
       count: true,
@@ -54,17 +50,16 @@ const SearchAsync: React.FC<Props> = () => {
   };
 
   //const debounceFetchOptions = debounce(fetchOptions);
-  const delayLog = () =>{
-    console.log('delayed throtled log');
-  }
-  const throtleAlias = throttle(delayLog, 2000);
-  const trtoledcall = throttled;
-  React.useEffect(() => {
-    //debounceFetchOptions(inputValue);
-    console.log(`try call trotle. inval=-${inputValue}-`);
-    //throttled.current(inputValue);
-    trtoledcall(inputValue);
-  }, [inputValue]); //, value
+  // const delayLog = (val: string) => {
+  //   console.log(`delayed throtled log -${val}-`);
+  // };
+  const throtleAlias = throttle(fetchOptions, 2000);
+  // React.useEffect(() => {
+  //   //debounceFetchOptions(inputValue);
+  //   console.log(`try call trotle. inval=-${inputValue}-`);
+  //   //throttled.current(inputValue);
+  //   trtoledcall(inputValue);
+  // }, [inputValue]); //, value
 
   return (
     <Autocomplete
@@ -75,7 +70,11 @@ const SearchAsync: React.FC<Props> = () => {
       options={options}
       onInputChange={(event, newInputValue) => {
         console.log(`new input: ${newInputValue}`);
-        throtleAlias();
+        if (newInputValue !== "") {
+          throtleAlias(newInputValue);
+        } else {
+          setOptions([]);
+        }
         //setInputValue(newInputValue);
       }}
       onChange={(event, newValue, reason) => {
