@@ -51,7 +51,9 @@ const SearchAsync: React.FC<Props> = () => {
 
   const debounceFetchOptions = debounce(fetchOptions);
   const throttled = useRef(
+    //console.log('pred trotle');
     throttle((newValue) => console.log({ throtled: newValue }), 5000)
+    console.log('PO trotle');
   );
 
   React.useEffect(() => {
