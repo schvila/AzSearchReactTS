@@ -18,10 +18,10 @@ type Props = BaseProps & InjectedProps;
 //   };
 // }
 function throttled(val: string) {
-  //console.log('pred trotle');
-  throttle((val) => console.log({ throtled: val }), 5000, {leading: true});
-  console.log("PO trotle");
-};
+  throttle((val) => {
+    console.log("vola se to vubec");
+  }, 200); //, {leading: true}
+}
 const SearchAsync: React.FC<Props> = () => {
   const [inputValue, setInputValue] = React.useState("");
   const [value, setValue] = React.useState<any>(undefined);
@@ -54,7 +54,10 @@ const SearchAsync: React.FC<Props> = () => {
   };
 
   //const debounceFetchOptions = debounce(fetchOptions);
-  
+  const delayLog = () =>{
+    console.log('delayed throtled log');
+  }
+  const throtleAlias = throttle(delayLog, 2000);
   const trtoledcall = throttled;
   React.useEffect(() => {
     //debounceFetchOptions(inputValue);
@@ -72,11 +75,12 @@ const SearchAsync: React.FC<Props> = () => {
       options={options}
       onInputChange={(event, newInputValue) => {
         console.log(`new input: ${newInputValue}`);
-        setInputValue(newInputValue);
+        throtleAlias();
+        //setInputValue(newInputValue);
       }}
       onChange={(event, newValue, reason) => {
         console.log(`onChange val ${newValue} reason ${reason}`);
-        
+
         setValue(newValue);
       }}
       value={value}
