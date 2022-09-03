@@ -8,16 +8,20 @@ type InjectedProps = {};
 
 type Props = BaseProps & InjectedProps;
 
-function debounce(func: any, timeout = 1000) {
-  let timer: NodeJS.Timer | undefined = undefined;
-  return (text: string) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      func(text);
-    }, timeout);
-  };
-}
-
+// function debounce(func: any, timeout = 1000) {
+//   let timer: NodeJS.Timer | undefined = undefined;
+//   return (text: string) => {
+//     clearTimeout(timer);
+//     timer = setTimeout(() => {
+//       func(text);
+//     }, timeout);
+//   };
+// }
+function throttled(val: string) {
+  //console.log('pred trotle');
+  throttle((val) => console.log({ throtled: val }), 5000, {leading: true});
+  console.log("PO trotle");
+};
 const SearchAsync: React.FC<Props> = () => {
   const [inputValue, setInputValue] = React.useState("");
   const [value, setValue] = React.useState<any>(undefined);
@@ -49,18 +53,15 @@ const SearchAsync: React.FC<Props> = () => {
     setOptions(docNames);
   };
 
-  const debounceFetchOptions = debounce(fetchOptions);
-  const throttled = useRef(
-    //console.log('pred trotle');
-    throttle((newValue) => console.log({ throtled: newValue }), 5000)
-    console.log('PO trotle');
-  );
-
+  //const debounceFetchOptions = debounce(fetchOptions);
+  
+  const trtoledcall = throttled;
   React.useEffect(() => {
     //debounceFetchOptions(inputValue);
-    console.log("try call trotle.");
-    throttled.current(inputValue);
-  }, [inputValue, value]);
+    console.log(`try call trotle. inval=-${inputValue}-`);
+    //throttled.current(inputValue);
+    trtoledcall(inputValue);
+  }, [inputValue]); //, value
 
   return (
     <Autocomplete
@@ -70,9 +71,12 @@ const SearchAsync: React.FC<Props> = () => {
       )}
       options={options}
       onInputChange={(event, newInputValue) => {
+        console.log(`new input: ${newInputValue}`);
         setInputValue(newInputValue);
       }}
-      onChange={(event, newValue) => {
+      onChange={(event, newValue, reason) => {
+        console.log(`onChange val ${newValue} reason ${reason}`);
+        
         setValue(newValue);
       }}
       value={value}
