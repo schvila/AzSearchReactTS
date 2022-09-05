@@ -19,7 +19,7 @@ type Props = BaseProps & InjectedProps;
 // }
 const SearchAsync: React.FC<Props> = () => {
   const [value, setValue] = React.useState<any>(undefined);
-  const [options, setOptions] = React.useState<any>([]);
+  const [results, setRsults] = React.useState<any[]>([]);
 
   const fetchOptions = async (inputValue: any) => {
     console.log(`searching for -${inputValue}-`);
@@ -28,7 +28,8 @@ const SearchAsync: React.FC<Props> = () => {
       queryType: "full",
       count: true,
       top: 10,
-      search: `/.*${inputValue}.*/`,
+      search: `${inputValue}`,
+      searchFields: "documentname,title"
     });
     let response = await fetch(
       `/indexes/infors-smart-pages-index-at/docs/search?api-version=2021-04-30-Preview`,
@@ -46,34 +47,27 @@ const SearchAsync: React.FC<Props> = () => {
     let docNames = finalData.value.map((item: any) => {
       return item.documentname;
     });
-    setOptions(docNames);
+    console.log(finalData.value);
+    setRsults(finalData.value);
   };
 
-  //const debounceFetchOptions = debounce(fetchOptions);
-  // const delayLog = (val: string) => {
-  //   console.log(`delayed throtled log -${val}-`);
-  // };
   const throtleAlias = throttle(fetchOptions, 2000);
-  // React.useEffect(() => {
-  //   //debounceFetchOptions(inputValue);
-  //   console.log(`try call trotle. inval=-${inputValue}-`);
-  //   //throttled.current(inputValue);
-  //   trtoledcall(inputValue);
-  // }, [inputValue]); //, value
-
+  //loading={true}
+  
   return (
     <Autocomplete
       sx={{ display: "flex", width: 200 }}
       renderInput={(params) => (
         <TextField {...params} label="Search" variant="outlined" />
       )}
-      options={options}
+      //options={!results || results.length === 0 ? [{label:"Loading...", id:0}] : results }
+      options={results}
       onInputChange={(event, newInputValue) => {
         console.log(`new input: ${newInputValue}`);
         if (newInputValue !== "") {
           throtleAlias(newInputValue);
         } else {
-          setOptions([]);
+          setRsults([]);
         }
         //setInputValue(newInputValue);
       }}
@@ -82,20 +76,26 @@ const SearchAsync: React.FC<Props> = () => {
 
         setValue(newValue);
       }}
-      value={value}
+      value={value?.documentname}
       filterOptions={(x) => x}
       autoComplete
-      includeInputInList
+      includeInputInList={false}
       filterSelectedOptions
       renderOption={(props, option: any) => {
+        console.log(option);
+        console.log(props);
+        console.log(option.sys_id);
+        
+        // key option.sys_id
         return (
           <li {...props}>
             <Grid container alignItems="center">
-              <Grid item>
-                <Box sx={{ color: "text.secondary", mr: 2 }} />
-              </Grid>
               <Grid item xs>
-                {option}
+                <span
+                    key={option.sys_id}
+                  >
+                    {option.documentname}
+                  </span>
               </Grid>
             </Grid>
           </li>

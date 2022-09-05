@@ -8,7 +8,7 @@ function App() {
   return (
     <Grid
       container
-      justify='center'
+      justifyContent='center'
       alignItems='center'
       direction='column'
       style={{minHeight: '100vh'}}
