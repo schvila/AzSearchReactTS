@@ -23,13 +23,14 @@ const SearchAsync: React.FC<Props> = () => {
 
   const fetchOptions = async (inputValue: any) => {
     console.log(`searching for -${inputValue}-`);
-
+    return;
     let qbody = JSON.stringify({
       queryType: "full",
       count: true,
       top: 10,
       search: `${inputValue}`,
-      searchFields: "documentname,title"
+      searchFields: "documentname,title,relationships",
+      select: "documentname,title,relationships, sys_id"
     });
     let response = await fetch(
       `/indexes/infors-smart-pages-index-at/docs/search?api-version=2021-04-30-Preview`,
@@ -51,7 +52,7 @@ const SearchAsync: React.FC<Props> = () => {
     setRsults(finalData.value);
   };
 
-  const throtleAlias = throttle(fetchOptions, 2000);
+  const throtleAlias = throttle(fetchOptions, 5000);
   //loading={true}
   
   return (
@@ -76,11 +77,13 @@ const SearchAsync: React.FC<Props> = () => {
 
         setValue(newValue);
       }}
-      value={value?.documentname}
+      isOptionEqualToValue={(option, value) => option.sys_id === value.sys_id}
+      getOptionLabel={(option)=>option.documentname}
       filterOptions={(x) => x}
       autoComplete
+      clearOnBlur={ false }
+      clearOnEscape={ false }
       includeInputInList={false}
-      filterSelectedOptions
       renderOption={(props, option: any) => {
         console.log(option);
         console.log(props);
@@ -88,14 +91,12 @@ const SearchAsync: React.FC<Props> = () => {
         
         // key option.sys_id
         return (
-          <li {...props}>
+          <li {...props}
+                    key={option.sys_id}
+                    >
             <Grid container alignItems="center">
               <Grid item xs>
-                <span
-                    key={option.sys_id}
-                  >
                     {option.documentname}
-                  </span>
               </Grid>
             </Grid>
           </li>
