@@ -2,6 +2,7 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
+import { useState } from "react";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
@@ -65,10 +66,13 @@ const rows = [
 ];
 
 export default function DataGridDemo() {
+  // see https://stackoverflow.com/questions/66424752/get-row-item-on-checkbox-selection-in-react-mui-datagrid
   const { apiRef, columns } = useApiRef();
+  const [results, setResults] = useState<any[]>([]);
   const handleClickButton = () => {
     // @ts-ignore: Object is possibly 'null'.
-    console.log(apiRef?.current.getRowModels());
+    //console.log(apiRef?.current.getRowModels());
+    console.log(results);
   };
   return (
     <Box sx={{ height: 400, width: "100%" }}>
@@ -79,6 +83,7 @@ export default function DataGridDemo() {
         checkboxSelection
         disableSelectionOnClick
         experimentalFeatures={{ newEditingApi: true }}
+        onSelectionModelChange={(items) => setResults(items)}
       />
       <Button onClick={handleClickButton}>Show data</Button>
     </Box>
