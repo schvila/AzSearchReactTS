@@ -1,6 +1,7 @@
 import React from "react";
-import { Autocomplete, Box, Grid, TextField } from "@mui/material";
+import { Autocomplete, Grid, TextField } from "@mui/material";
 import { throttle } from "lodash";
+import IAZDocument from "./IAZDocument";
 
 type BaseProps = {};
 
@@ -8,29 +9,19 @@ type InjectedProps = {};
 
 type Props = BaseProps & InjectedProps;
 
-// function debounce(func: any, timeout = 1000) {
-//   let timer: NodeJS.Timer | undefined = undefined;
-//   return (text: string) => {
-//     clearTimeout(timer);
-//     timer = setTimeout(() => {
-//       func(text);
-//     }, timeout);
-//   };
-// }
+
 const SearchAsync: React.FC<Props> = () => {
-  const [value, setValue] = React.useState<any>(undefined);
-  const [results, setRsults] = React.useState<any[]>([]);
+  const [results, setResults] = React.useState<IAZDocument[]>([]);
 
   const fetchOptions = async (inputValue: any) => {
     console.log(`searching for -${inputValue}-`);
-    return;
     let qbody = JSON.stringify({
       queryType: "full",
       count: true,
       top: 10,
       search: `${inputValue}`,
       searchFields: "documentname,title,relationships",
-      select: "documentname,title,relationships, sys_id"
+      select: "documentname,title,relationships, sys_id,nodeguid,sys_site"
     });
     let response = await fetch(
       `/indexes/infors-smart-pages-index-at/docs/search?api-version=2021-04-30-Preview`,
@@ -45,37 +36,27 @@ const SearchAsync: React.FC<Props> = () => {
     );
 
     let finalData = await response.json();
-    let docNames = finalData.value.map((item: any) => {
-      return item.documentname;
-    });
-    console.log(finalData.value);
-    setRsults(finalData.value);
+    setResults(finalData.value);
   };
 
-  const throtleAlias = throttle(fetchOptions, 5000);
-  //loading={true}
-  
+  const throtleAlias = throttle(fetchOptions, 500);
   return (
     <Autocomplete
-      sx={{ display: "flex", width: 200 }}
+    sx={{ display: "flex", width: 300 }}
       renderInput={(params) => (
         <TextField {...params} label="Search" variant="outlined" />
       )}
-      //options={!results || results.length === 0 ? [{label:"Loading...", id:0}] : results }
       options={results}
       onInputChange={(event, newInputValue) => {
         console.log(`new input: ${newInputValue}`);
         if (newInputValue !== "") {
           throtleAlias(newInputValue);
         } else {
-          setRsults([]);
+          setResults([]);
         }
-        //setInputValue(newInputValue);
       }}
       onChange={(event, newValue, reason) => {
         console.log(`onChange val ${newValue} reason ${reason}`);
-
-        setValue(newValue);
       }}
       isOptionEqualToValue={(option, value) => option.sys_id === value.sys_id}
       getOptionLabel={(option)=>option.documentname}

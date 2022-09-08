@@ -1,27 +1,20 @@
-//import React from 'react';
-//import logo from './logo.svg';
-//import './App.css';
-import Search from './Search';
 import SearchAsync from './SearchAsync';
-import { Grid } from '@material-ui/core';
+import DataGridDemo from './DataGriDemo';
+import React from 'react';
+
 function App() {
+  const defMargin = 10;
+  //const [qresults, setResults] = React.useState<any[]>([]);
   return (
-    <Grid
-      container
-      justifyContent='center'
-      alignItems='center'
-      direction='column'
-      style={{minHeight: '100vh'}}
-      spacing={5}
+    <div style={{marginLeft: defMargin, marginRight: defMargin, marginTop: defMargin}}
     >
-        <Grid item>
-          <SearchAsync />
-          <p>Any text will do.</p>
-        </Grid>
-        <Grid item>
-          <Search />
-        </Grid>
-   </Grid>
+        <div>
+          <SearchAsync  />
+        </div>
+        <div>
+        <DataGridDemo />
+        </div>
+   </div>
   );
 }
 

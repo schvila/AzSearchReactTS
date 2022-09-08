@@ -86,7 +86,7 @@ const Search = () => {
         <input
           id='az_search_input'
           type="text"
-          className="col-md-12 input"
+          className=" input"
           style={{ marginTop: 10 }}
           onChange={onInputChanged}
           value={searchtext}
@@ -95,7 +95,7 @@ const Search = () => {
         { suggestions.map((documentname: string, index: number) => (
             <div
               key={index}
-              className="suggestion col-md-12 justify-content-md-center"
+              className="suggestion  justify-content-md-center"
               onClick={() => onSuggestHandler(documentname)}
             >
               {documentname}
