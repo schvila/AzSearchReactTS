@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import Button from '@mui/material/Button';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -33,7 +34,23 @@ const columns: GridColDef[] = [
       `${params.row.firstName || ''} ${params.row.lastName || ''}`,
   },
 ];
+function useApiRef() {
+  const apiRef = React.useRef(null);
+  const _columns = React.useMemo(
+    () =>
+      columns.concat({
+        field: "__HIDDEN__",
+        width: 0,
+        renderCell: (params) => {
+          apiRef.current = params.api;
+          return null;
+        }
+      }),
+    [columns]
+  );
 
+  return { apiRef, columns: _columns };
+}
 const rows = [
   { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
   { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
@@ -47,17 +64,24 @@ const rows = [
 ];
 
 export default function DataGridDemo() {
+  const { apiRef, columns } = useApiRef();
+  const handleClickButton = () => {
+    // @ts-ignore: Object is possibly 'null'.
+    console.log(apiRef?.current.getRowModels());
+  };  
   return (
     <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={rows}
         columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
+        rowsPerPageOptions={[5,10,15]}
         checkboxSelection
         disableSelectionOnClick
         experimentalFeatures={{ newEditingApi: true }}
       />
+  <Button onClick={handleClickButton}>
+        Show data
+    </Button>    
     </Box>
   );
 }
