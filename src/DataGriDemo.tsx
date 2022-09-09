@@ -74,16 +74,24 @@ export default function DataGridDemo() {
     //console.log(apiRef?.current.getRowModels());
     console.log(results);
   };
-  return (
+  const selectionChanged = (items: any[]) => {
+    
+    console.log(items);
+    const rowsData = items.map((id) => rows.find((row)=> row.id === id));
+    console.log(rowsData);
+    
+    setResults(rowsData)
+  };
+return (
     <Box sx={{ height: 400, width: "100%" }}>
       <DataGrid
         rows={rows}
         columns={columns}
-        rowsPerPageOptions={[5, 10, 15]}
+        rowsPerPageOptions={[5, 10, 15,100]}
         checkboxSelection
         disableSelectionOnClick
         experimentalFeatures={{ newEditingApi: true }}
-        onSelectionModelChange={(items) => setResults(items)}
+        onSelectionModelChange={(items) => selectionChanged(items)}
       />
       <Button onClick={handleClickButton}>Show data</Button>
     </Box>
