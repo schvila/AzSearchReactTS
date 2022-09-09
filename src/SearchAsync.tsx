@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { Autocomplete, Grid, TextField } from "@mui/material";
 import { throttle } from "lodash";
 import IAZDocument from "./IAZDocument";
@@ -11,7 +11,9 @@ type Props = BaseProps & InjectedProps;
 
 
 const SearchAsync: React.FC<Props> = () => {
-  const [results, setResults] = React.useState<IAZDocument[]>([]);
+  const [suggestions, SetSuggestions] = useState<IAZDocument[]>([]);
+  const [fullSearch, setFullSearch] = useState<boolean>(false);
+  const [results, SetResults] = useState<IAZDocument[]>([]);
 
   const fetchOptions = async (inputValue: any) => {
     console.log(`searching for -${inputValue}-`);
@@ -36,23 +38,34 @@ const SearchAsync: React.FC<Props> = () => {
     );
 
     let finalData = await response.json();
-    setResults(finalData.value);
+    SetSuggestions(finalData.value);
   };
 
+const handleOnKeyDown = (event: any) => {
+    if (event.key === "Enter") {
+      console.log('full/result search now;');
+      setFullSearch(true);
+    }
+  };
   const throtleAlias = throttle(fetchOptions, 500);
   return (
     <Autocomplete
     sx={{ display: "flex", width: 300 }}
       renderInput={(params) => (
-        <TextField {...params} label="Search" variant="outlined" />
+        <TextField {...params} 
+          label="Search" 
+          variant="outlined" 
+          onKeyDown={handleOnKeyDown}
+        />
       )}
-      options={results}
+      options={suggestions}
       onInputChange={(event, newInputValue) => {
         console.log(`new input: ${newInputValue}`);
+        setFullSearch(false);
         if (newInputValue !== "") {
           throtleAlias(newInputValue);
         } else {
-          setResults([]);
+          SetSuggestions([]);
         }
       }}
       onChange={(event, newValue, reason) => {
