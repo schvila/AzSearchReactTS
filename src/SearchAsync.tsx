@@ -1,30 +1,35 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Autocomplete, Grid, TextField } from "@mui/material";
 import { throttle } from "lodash";
 import IAZDocument from "./IAZDocument";
 
-
 type Props = {
-  setResults: (results: IAZDocument[]) => void 
+  setResults: (results: IAZDocument[]) => void;
 };
 
-
-const SearchAsync: React.FC<Props> = (props:Props) => {
+const SearchAsync: React.FC<Props> = (props: Props) => {
   const [suggestions, SetSuggestions] = useState<IAZDocument[]>([]);
-  const [fullSearch, setFullSearch] = useState<boolean>(false);
-  //const [results, SetResults] = useState<IAZDocument[]>([]);
-  const [searchVal, SetSearchVal] = useState<string>('');
+  const [searchVal, SetSearchVal] = useState<string>("");
 
-  const fetchOptions = async (inputValue: any) => {
-    console.log(`searching for -${inputValue}-`);
-    let qbody = JSON.stringify({
-      queryType: "full",
+  const searchAZ = async (value: string, top = 10) => {
+    console.log(`searching for -${value}-`);
+    //let qvalue = value.replace(' ', ' | ');
+    const bodyBase = {
+      queryType: "simple",
       count: true,
-      top: 10,
-      search: `${inputValue}`,
+      search: `${value}`,
       searchFields: "documentname,title,relationships",
-      select: "documentname,title,relationships, sys_id,nodeguid,sys_site"
-    });
+      select: "documentname,title,relationships, sys_id,nodeguid,sys_site",
+    };
+    let body;
+    if (top > 0) {
+      body = { top: top, ...bodyBase };
+    }
+    else {
+      body = bodyBase;
+    }
+
+    let qbody = JSON.stringify(body);
     let response = await fetch(
       `/indexes/infors-smart-pages-index-at/docs/search?api-version=2021-04-30-Preview`,
       {
@@ -38,33 +43,39 @@ const SearchAsync: React.FC<Props> = (props:Props) => {
     );
 
     let finalData = await response.json();
-    SetSuggestions(finalData.value);
-    props.setResults(finalData.value);
-  };
-
-const handleOnKeyDown = (event: any) => {
-    if (event.key === "Enter") {
-      console.log(`full/result search now for-${searchVal}-.`);
-      setFullSearch(true);
+    console.log(finalData.value);
+    
+    if (top === 0) {
+      props.setResults(finalData.value);
+    } else {
+      SetSuggestions(finalData.value);
     }
   };
-  const throtleAlias = throttle(fetchOptions, 500);
+
+  const handleOnKeyDown = (event: any) => {
+    if (event.key === "Enter") {
+      console.log(`full/result search now for-${searchVal}-.`);
+      SetSuggestions([]);
+      throtleAlias(searchVal, 0);
+    }
+  };
+  const throtleAlias = throttle(searchAZ, 500);
   return (
     <Autocomplete
-    sx={{ display: "flex", width: 300 }}
+      sx={{ display: "flex", width: 300 }}
       renderInput={(params) => (
-        <TextField {...params} 
-          label="Search" 
-          variant="outlined" 
+        <TextField
+          {...params}
+          label="Search"
+          variant="outlined"
           onKeyDown={handleOnKeyDown}
         />
       )}
       options={suggestions}
       onInputChange={(event, newInputValue) => {
         console.log(`new input: ${newInputValue}`);
-        setFullSearch(false);
         if (newInputValue !== "") {
-          SetSearchVal(newInputValue)
+          SetSearchVal(newInputValue);
           throtleAlias(newInputValue);
         } else {
           SetSuggestions([]);
@@ -74,25 +85,23 @@ const handleOnKeyDown = (event: any) => {
         console.log(`onChange val ${newValue} reason ${reason}`);
       }}
       isOptionEqualToValue={(option, value) => option.sys_id === value.sys_id}
-      getOptionLabel={(option)=>option.documentname}
+      getOptionLabel={(option) => option.documentname}
       filterOptions={(x) => x}
       autoComplete
-      clearOnBlur={ false }
-      clearOnEscape={ false }
+      clearOnBlur={false}
+      clearOnEscape={false}
       includeInputInList={false}
       renderOption={(props, option: any) => {
         console.log(option);
         console.log(props);
         console.log(option.sys_id);
-        
+
         // key option.sys_id
         return (
-          <li {...props}
-                    key={option.sys_id}
-                    >
+          <li {...props} key={option.sys_id}>
             <Grid container alignItems="center">
               <Grid item xs>
-                    {option.documentname}
+                {option.documentname}
               </Grid>
             </Grid>
           </li>
@@ -102,4 +111,4 @@ const handleOnKeyDown = (event: any) => {
   );
 };
 
-export default SearchAsync// as React.ComponentType<BaseProps>;
+export default SearchAsync; // as React.ComponentType<BaseProps>;

@@ -1,5 +1,5 @@
 import SearchAsync from './SearchAsync';
-import DataGridDemo from './DataGriDemo';
+import ResultGrid from './ResultGrid';
 import React from 'react';
 import IAZDocument from './IAZDocument';
 
@@ -14,7 +14,7 @@ function App() {
           <SearchAsync setResults={setResults} />
         </div>
         <div>
-        <DataGridDemo results={results} />
+        <ResultGrid results={results} />
         </div>
    </div>
   );
