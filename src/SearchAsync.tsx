@@ -14,6 +14,7 @@ const SearchAsync: React.FC<Props> = () => {
   const [suggestions, SetSuggestions] = useState<IAZDocument[]>([]);
   const [fullSearch, setFullSearch] = useState<boolean>(false);
   const [results, SetResults] = useState<IAZDocument[]>([]);
+  const [searchVal, SetSearchVal] = useState<string>('');
 
   const fetchOptions = async (inputValue: any) => {
     console.log(`searching for -${inputValue}-`);
@@ -43,7 +44,7 @@ const SearchAsync: React.FC<Props> = () => {
 
 const handleOnKeyDown = (event: any) => {
     if (event.key === "Enter") {
-      console.log('full/result search now;');
+      console.log(`full/result search now for-${searchVal}-.`);
       setFullSearch(true);
     }
   };
@@ -63,6 +64,7 @@ const handleOnKeyDown = (event: any) => {
         console.log(`new input: ${newInputValue}`);
         setFullSearch(false);
         if (newInputValue !== "") {
+          SetSearchVal(newInputValue)
           throtleAlias(newInputValue);
         } else {
           SetSuggestions([]);
