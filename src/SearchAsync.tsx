@@ -3,17 +3,16 @@ import { Autocomplete, Grid, TextField } from "@mui/material";
 import { throttle } from "lodash";
 import IAZDocument from "./IAZDocument";
 
-type BaseProps = {};
 
-type InjectedProps = {};
+type Props = {
+  setResults: (results: IAZDocument[]) => void 
+};
 
-type Props = BaseProps & InjectedProps;
 
-
-const SearchAsync: React.FC<Props> = () => {
+const SearchAsync: React.FC<Props> = (props:Props) => {
   const [suggestions, SetSuggestions] = useState<IAZDocument[]>([]);
   const [fullSearch, setFullSearch] = useState<boolean>(false);
-  const [results, SetResults] = useState<IAZDocument[]>([]);
+  //const [results, SetResults] = useState<IAZDocument[]>([]);
   const [searchVal, SetSearchVal] = useState<string>('');
 
   const fetchOptions = async (inputValue: any) => {
@@ -40,6 +39,7 @@ const SearchAsync: React.FC<Props> = () => {
 
     let finalData = await response.json();
     SetSuggestions(finalData.value);
+    props.setResults(finalData.value);
   };
 
 const handleOnKeyDown = (event: any) => {
@@ -102,4 +102,4 @@ const handleOnKeyDown = (event: any) => {
   );
 };
 
-export default SearchAsync as React.ComponentType<BaseProps>;
+export default SearchAsync// as React.ComponentType<BaseProps>;

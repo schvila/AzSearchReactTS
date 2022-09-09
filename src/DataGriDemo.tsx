@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import { useState } from "react";
+import IAZDocument from "./IAZDocument";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90, hide: true },
@@ -65,10 +66,16 @@ const rows = [
   { id: 'I', lastName: "Roxie", firstName: "Harvey", age: 65 },
 ];
 
-export default function DataGridDemo() {
+type Props = {
+  results: IAZDocument[]
+};
+
+const DataGridDemo: React.FC<Props> = ({results}) => {
+  console.log({resultpar: results});
+  
   // see https://stackoverflow.com/questions/66424752/get-row-item-on-checkbox-selection-in-react-mui-datagrid
   const { apiRef, columns } = useApiRef();
-  const [results, setResults] = useState<any[]>([]);
+  //const [results, setResults] = useState<any[]>([]);
   const handleClickButton = () => {
     // @ts-ignore: Object is possibly 'null'.
     //console.log(apiRef?.current.getRowModels());
@@ -80,7 +87,7 @@ export default function DataGridDemo() {
     const rowsData = items.map((id) => rows.find((row)=> row.id === id));
     console.log(rowsData);
     
-    setResults(rowsData)
+    //setResults(rowsData)
   };
 return (
     <Box sx={{ height: 400, width: "100%" }}>
@@ -97,3 +104,4 @@ return (
     </Box>
   );
 }
+export default DataGridDemo;
