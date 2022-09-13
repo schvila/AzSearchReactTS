@@ -2,7 +2,7 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
-import IAZDocument from "./IAZDocument";
+import IAZDocument from "../../interfaces/IAZDocument";
 import { Stack } from "@mui/system";
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -41,7 +41,7 @@ type Props = {
 
 const ResultGrid: React.FC<Props> = ({results}) => {
   results.map(item=>{
-    item.id = item.sys_id});
+  item.id = item.sys_id});
   console.log({resultpar: results});
   const [relType, setRelType] = React.useState('');
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Autocomplete, Grid, TextField } from "@mui/material";
 import { throttle } from "lodash";
-import IAZDocument from "./IAZDocument";
+import IAZDocument from "../../interfaces/IAZDocument";
 
 type Props = {
   setResults: (results: IAZDocument[]) => void;

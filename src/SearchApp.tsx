@@ -1,9 +1,9 @@
-import SearchAsync from './SearchAsync';
-import ResultGrid from './ResultGrid';
+import SearchAsync from './components/search/SearchAsync';
+import ResultGrid from './components/search/ResultGrid';
 import React from 'react';
-import IAZDocument from './IAZDocument';
+import IAZDocument from './interfaces/IAZDocument';
 
-function App() {
+function SearchApp() {
   const defMargin = 10;
   const [results, setResults] = React.useState<IAZDocument[]>([]);
 
@@ -20,4 +20,4 @@ function App() {
   );
 }
 
-export default App;
+export default SearchApp;
