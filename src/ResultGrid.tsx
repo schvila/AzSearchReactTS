@@ -3,7 +3,10 @@ import Box from "@mui/material/Box";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import IAZDocument from "./IAZDocument";
-
+import { Stack } from "@mui/system";
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
 const columns: GridColDef[] = [
   { field: "id", headerName: "id", width: 90, hide: true },
   {
@@ -27,24 +30,11 @@ const columns: GridColDef[] = [
   {
     field: "relationships",
     headerName: "Direct relations",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    width: 160,
+    description: "Display all related pages.",
+    sortable: true,
+    width: 300,
   },
 ];
-
-// const rows = [
-//   { id: 'A', lastName: "Snow", firstName: "Jon", age: 35, sys_id: "256" },
-//   { id: 'B', lastName: "Lannister", firstName: "Cersei", age: 42 },
-//   { id: 'C', lastName: "Lannister", firstName: "Jaime", age: 45, sys_id: "256" },
-//   { id: 'D', lastName: "Stark", firstName: "Arya", age: 16, sys_id: "256" },
-//   { id: 'E', lastName: "Targaryen", firstName: "Daenerys", age: null, sys_id: "256" },
-//   { id: 'F', lastName: "Melisandre", firstName: null, age: 150, sys_id: "256" },
-//   { id: 'G', lastName: "Clifford", firstName: "Ferrara", age: 44, sys_id: "256" },
-//   { id: 'H', lastName: "Frances", firstName: "Rossini", age: 36, sys_id: "256" },
-//   { id: 'I', lastName: "Roxie", firstName: "Harvey", age: 65, sys_id: "256" },
-// ];
-
 type Props = {
   results: IAZDocument[]
 };
@@ -53,7 +43,8 @@ const ResultGrid: React.FC<Props> = ({results}) => {
   results.map(item=>{
     item.id = item.sys_id});
   console.log({resultpar: results});
-  
+  const [relType, setRelType] = React.useState('');
+
   let rowsData: any[];
   const handleClickButton = () => {
     console.log(rowsData);
@@ -67,6 +58,10 @@ const ResultGrid: React.FC<Props> = ({results}) => {
     
     //setResults(rowsData)
   };
+  const relationTypeChanged = (event: SelectChangeEvent) => {
+    setRelType(event.target.value);
+
+  }
 return (
     <Box sx={{ height: 400, width: "100%" }}>
       <DataGrid
@@ -78,7 +73,30 @@ return (
         experimentalFeatures={{ newEditingApi: true }}
         onSelectionModelChange={selectionChanged}
       />
-      <Button onClick={handleClickButton}>Show data</Button>
+      <Stack 
+        spacing={2} 
+        direction="row" 
+        alignItems="flex-end"
+      >
+      <InputLabel id="rel-type-label">Relation name</InputLabel>
+      <Select
+        labelId="rel-type-label"
+        sx={{width:150}}
+        label='Relationship name'
+        onChange={relationTypeChanged}
+        value={relType}
+      >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          <MenuItem value="RelatesTo">RelatesTo</MenuItem>
+          <MenuItem value="DependsOn">DependsOn</MenuItem>
+          <MenuItem value="ContinuedBy">ContinuedBy</MenuItem>
+          <MenuItem value="ReplacedBy">ReplacedBy</MenuItem>
+          <MenuItem value="SuperseededBy">SuperseededBy</MenuItem>
+      </Select>
+      <Button variant="outlined" onClick={handleClickButton}>Show data</Button>
+      </Stack>
     </Box>
   );
 }

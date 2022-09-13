@@ -15,7 +15,7 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
     console.log(`searching for -${value}-`);
     //let qvalue = value.replace(' ', ' | ');
     const bodyBase = {
-      queryType: "simple",
+      queryType: "full",
       count: true,
       search: `${value}`,
       searchFields: "documentname,title,relationships",
@@ -28,10 +28,11 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
     else {
       body = bodyBase;
     }
-
+    const serviceName = 'https://infors-at-dxp-cognitive-search-service.search.windows.net';
+    const indexName = 'infors-smart-pages-index-at';
     let qbody = JSON.stringify(body);
     let response = await fetch(
-      `/indexes/infors-smart-pages-index-at/docs/search?api-version=2021-04-30-Preview`,
+      `${serviceName}/indexes/${indexName}/docs/search?api-version=2021-04-30-Preview`,
       {
         method: "POST",
         headers: {
