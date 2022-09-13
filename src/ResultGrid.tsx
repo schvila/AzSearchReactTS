@@ -30,9 +30,9 @@ const columns: GridColDef[] = [
   {
     field: "relationships",
     headerName: "Direct relations",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    width: 160,
+    description: "Display all related pages.",
+    sortable: true,
+    width: 300,
   },
 ];
 type Props = {

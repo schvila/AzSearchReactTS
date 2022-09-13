@@ -15,7 +15,7 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
     console.log(`searching for -${value}-`);
     //let qvalue = value.replace(' ', ' | ');
     const bodyBase = {
-      queryType: "simple",
+      queryType: "full",
       count: true,
       search: `${value}`,
       searchFields: "documentname,title,relationships",
