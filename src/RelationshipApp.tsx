@@ -2,13 +2,15 @@ import SearchAsync from './components/search/SearchAsync';
 import ResultGrid from './components/search/ResultGrid';
 import React from 'react';
 import IAZDocument from './interfaces/IAZDocument';
+import GetRelationships from './RelationshipControllerApi';
 
-function SearchApp() {
+function RelationshipApp() {
   const defMargin = 10;
   const [results, setResults] = React.useState<IAZDocument[]>([]);
+  GetRelationships();
 
   return (
-    <div style={{marginLeft: defMargin, marginRight: defMargin, marginTop: defMargin}}
+    <div 
     >
         <div>
           <SearchAsync setResults={setResults} />
@@ -20,4 +22,4 @@ function SearchApp() {
   );
 }
 
-export default SearchApp;
+export default RelationshipApp;

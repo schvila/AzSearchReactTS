@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Autocomplete, Grid, TextField } from "@mui/material";
 import { throttle } from "lodash";
 import IAZDocument from "../../interfaces/IAZDocument";
+import myConfig from "../../Config";
 
 type Props = {
   setResults: (results: IAZDocument[]) => void;
@@ -19,7 +20,7 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
       count: true,
       search: `${value}`,
       searchFields: "documentname,title,relationships",
-      select: "documentname,title,relationships, sys_id,nodeguid,sys_site",
+      select: "documentname,title,relationships, sys_id,nodeguid,sys_site,documentid,nodeid",
     };
     let body;
     if (top > 0) {
@@ -28,16 +29,15 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
     else {
       body = bodyBase;
     }
-    const serviceName = 'https://infors-at-dxp-cognitive-search-service.search.windows.net';
-    const indexName = 'infors-smart-pages-index-at';
+    const config = myConfig();
     let qbody = JSON.stringify(body);
     let response = await fetch(
-      `${serviceName}/indexes/${indexName}/docs/search?api-version=2021-04-30-Preview`,
+      `${config.serviceName}/indexes/${config.indexName}/docs/search?api-version=2021-04-30-Preview`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "api-key": "1B09FB11B19CAD26815E39FCA2154CC5",
+          "api-key": config.apikey,
         },
         body: qbody,
       }
@@ -56,6 +56,7 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
   const handleOnKeyDown = (event: any) => {
     if (event.key === "Enter") {
       console.log(`full/result search now for-${searchVal}-.`);
+      props.setResults([]);
       SetSuggestions([]);
       throtleAlias(searchVal, 0);
     }

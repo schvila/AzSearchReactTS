@@ -6,5 +6,6 @@ export default interface IAZDocument {
     nodeguid: string
     sys_site: string
     id: string
+    documentid: number
   };
   

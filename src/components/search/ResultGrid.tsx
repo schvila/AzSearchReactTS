@@ -1,6 +1,6 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridFooter, GridFooterContainer } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import IAZDocument from "../../interfaces/IAZDocument";
 import { Stack } from "@mui/system";
@@ -62,6 +62,43 @@ const ResultGrid: React.FC<Props> = ({results}) => {
     setRelType(event.target.value);
 
   }
+  function CustomFooter () {
+    return (
+      <GridFooterContainer>
+      <Stack 
+        spacing={2} 
+        direction="row" 
+        alignItems="flex-end"
+      >
+        <InputLabel id="rel-type-label">Relation name</InputLabel>
+        <Select
+          labelId="rel-type-label"
+          sx={{width:150, height:'2em'}}
+          label='Relationship name'
+          onChange={relationTypeChanged}
+          value={relType}
+        >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value="RelatesTo">RelatesTo</MenuItem>
+            <MenuItem value="DependsOn">DependsOn</MenuItem>
+            <MenuItem value="ContinuedBy">ContinuedBy</MenuItem>
+            <MenuItem value="ReplacedBy">ReplacedBy</MenuItem>
+            <MenuItem value="SuperseededBy">SuperseededBy</MenuItem>
+        </Select>
+        <Button
+          sx={{height:'2em'}} 
+          variant="contained"
+          
+          onClick={handleClickButton}>Add Selected</Button>
+      </Stack>
+      <GridFooter sx={{
+        border: 'none', // To delete double border.
+        }} />
+      </GridFooterContainer>
+    );
+  }  
 return (
     <Box sx={{ height: 400, width: "100%" }}>
       <DataGrid
@@ -72,31 +109,8 @@ return (
         disableSelectionOnClick
         experimentalFeatures={{ newEditingApi: true }}
         onSelectionModelChange={selectionChanged}
+        components={{Footer: CustomFooter}}
       />
-      <Stack 
-        spacing={2} 
-        direction="row" 
-        alignItems="flex-end"
-      >
-      <InputLabel id="rel-type-label">Relation name</InputLabel>
-      <Select
-        labelId="rel-type-label"
-        sx={{width:150}}
-        label='Relationship name'
-        onChange={relationTypeChanged}
-        value={relType}
-      >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value="RelatesTo">RelatesTo</MenuItem>
-          <MenuItem value="DependsOn">DependsOn</MenuItem>
-          <MenuItem value="ContinuedBy">ContinuedBy</MenuItem>
-          <MenuItem value="ReplacedBy">ReplacedBy</MenuItem>
-          <MenuItem value="SuperseededBy">SuperseededBy</MenuItem>
-      </Select>
-      <Button variant="outlined" onClick={handleClickButton}>Show data</Button>
-      </Stack>
     </Box>
   );
 }

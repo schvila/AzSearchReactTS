@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 //import './index.css';
-import SearchApp from './SearchApp';
+import RelationshipApp from './RelationshipApp';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
-  document.getElementById('searchRelationsEntry') as HTMLElement
+  document.getElementById('relationsEntry') as HTMLElement // root
 );
 root.render(
   <React.StrictMode>
-    <SearchApp />
+    <RelationshipApp />
   </React.StrictMode>
 );
 
