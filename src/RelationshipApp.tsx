@@ -2,10 +2,18 @@ import SearchAsync from './components/search/SearchAsync';
 import ResultGrid from './components/search/ResultGrid';
 import React from 'react';
 import IAZDocument from './interfaces/IAZDocument';
-import GetRelationships from './RelationshipControllerApi';
+import {AddRelations} from './RelationshipControllerApi';
 import RelationshipGrid from './components/RelationshipGrid';
-
-function RelationshipApp() {
+function  RelationshipApp() {
+  console.log('async call to add relations');
+  
+  (async () => {
+    var t = await AddRelations();
+    console.log({asyncres: t});
+    
+  })();
+    
+  
   const defMargin = 10;
   const [results, setResults] = React.useState<IAZDocument[]>([]);
   const [reload, setReload] = React.useState<boolean>(true);

@@ -36,14 +36,12 @@ const columns: GridColDef[] = [
     {
       field: "leftNodeName",
       headerName: "Left page",
-      width: 150,
       editable: true,
     },
 
     {
       field: "leftPageType",
       headerName: "Left page type",
-      width: 110,
       editable: true,
     },
     {
@@ -51,18 +49,15 @@ const columns: GridColDef[] = [
       headerName: "Relationship name",
       description: "Display all related pages.",
       sortable: true,
-      width: 130,
     },
     {
         field: "rightNodeName",
         headerName: "Right page",
-        width: 150,
         editable: true,
       },
       {
         field: "rightPageType",
         headerName: "Right page type",
-        width: 120,
         editable: true,
       },
     ];
@@ -128,7 +123,7 @@ const RelationshipGrid: React.FC<Props>  = ({reload}) => {
         experimentalFeatures={{ newEditingApi: true }}
         initialState={{
           pagination: {
-            pageSize: 5,
+            pageSize: 10,
           },
         }}
         pageSize={5}

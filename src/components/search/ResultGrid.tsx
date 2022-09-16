@@ -112,7 +112,7 @@ return (
         components={{Footer: CustomFooter}}
         initialState={{
           pagination: {
-            pageSize: 5,
+            pageSize: 10,
           },
         }}
         pageSize={5}
