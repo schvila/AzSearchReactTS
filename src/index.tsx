@@ -5,7 +5,7 @@ import RelationshipApp from './RelationshipApp';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
-  document.getElementById('relationsEntry') as HTMLElement // root
+  document.getElementById('root') as HTMLElement // relationsEntry, root
 );
 root.render(
   <React.StrictMode>

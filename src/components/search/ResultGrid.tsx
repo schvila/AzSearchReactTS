@@ -100,7 +100,7 @@ const ResultGrid: React.FC<Props> = ({results}) => {
     );
   }  
 return (
-    <Box sx={{ height: 400, width: "100%" }}>
+    <Box sx={{ width: "100%" }}>
       <DataGrid
         rows={results}
         columns={columns}
@@ -110,7 +110,13 @@ return (
         experimentalFeatures={{ newEditingApi: true }}
         onSelectionModelChange={selectionChanged}
         components={{Footer: CustomFooter}}
-      />
+        initialState={{
+          pagination: {
+            pageSize: 5,
+          },
+        }}
+        pageSize={5}
+        autoHeight={true}      />
     </Box>
   );
 }

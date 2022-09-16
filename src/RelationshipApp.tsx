@@ -3,11 +3,13 @@ import ResultGrid from './components/search/ResultGrid';
 import React from 'react';
 import IAZDocument from './interfaces/IAZDocument';
 import GetRelationships from './RelationshipControllerApi';
+import RelationshipGrid from './components/RelationshipGrid';
 
 function RelationshipApp() {
   const defMargin = 10;
   const [results, setResults] = React.useState<IAZDocument[]>([]);
-  GetRelationships();
+  const [reload, setReload] = React.useState<boolean>(true);
+  //GetRelationships();
 
   return (
     <div 
@@ -17,6 +19,9 @@ function RelationshipApp() {
         </div>
         <div>
         <ResultGrid results={results} />
+        </div>
+        <div>
+          <RelationshipGrid reload={reload} />
         </div>
    </div>
   );
