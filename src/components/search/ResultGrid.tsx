@@ -39,43 +39,31 @@ const columns: GridColDef[] = [
 ];
 type Props = {
   results: IAZDocument[]
+  reloadRelationships: () => void;
 };
 
-const ResultGrid: React.FC<Props> = ({results}) => {
+const ResultGrid: React.FC<Props> = ({results, reloadRelationships}) => {
   results.map(item=>{
   item.id = item.sys_id});
-  console.log({resultpar: results});
+
   const [relType, setRelType] = React.useState('');
   const [rowsData, setRowsData] = React.useState<any[]>([]);
-  //const [addIsDisabled, setAddIsDisabled] = React.useState(true);
-  //let rowsData: any[] = [];
   
   const handleAddSelected = () => {
-    console.log(rowsData);
     let rightNodes = '';
     rowsData.forEach((item)=>
     {
       rightNodes += item.nodeid + ','
-    })
-    console.log(
-      {
-        relName:relType,
-        rightNodes: rightNodes
-      });
-      // (async () => {
-      //   var t = await AddRelations(relType, rightNodes);
-      //   console.log({asyncres: t});
-        
-      // })();
-          
+    });
+    (async () => {
+      var t = await AddRelations(relType, rightNodes);
+      if(t.status === 200) {
+        reloadRelationships()
+      }
+    })();
   };
 
   function checkDisabledButton(){
-    console.log(
-      {relType:relType,
-        rows: rowsData.length
-        });
-    
     if(relType == "" || rowsData.length == 0) {
       return true;
     }
@@ -84,16 +72,10 @@ const ResultGrid: React.FC<Props> = ({results}) => {
     }
   };
   let addIsDisabled = checkDisabledButton();
-  console.log(
-    {relType:relType,
-      rows: rowsData.length
-      });
-//checkDisabledButton();
+
   const selectionChanged = (items: any[]) => {
     
-    console.log({selChaged: items});
     let rd  = items.map((id) => results.find((row)=> row.id === id));
-    console.log(rd);
     setRowsData(rd);
    };
   const relationTypeChanged = (event: SelectChangeEvent) => {

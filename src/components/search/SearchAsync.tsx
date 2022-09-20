@@ -13,8 +13,6 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
   const [searchVal, SetSearchVal] = useState<string>("");
 
   const searchAZ = async (value: string, top = 10) => {
-    console.log(`searching for -${value}-`);
-    //let qvalue = value.replace(' ', ' | ');
     const bodyBase = {
       queryType: "full",
       count: true,
@@ -44,7 +42,6 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
     );
 
     let finalData = await response.json();
-    console.log(finalData.value);
     
     if (top === 0) {
       props.setResults(finalData.value);
@@ -55,7 +52,6 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
 
   const handleOnKeyDown = (event: any) => {
     if (event.key === "Enter") {
-      console.log(`full/result search now for-${searchVal}-.`);
       props.setResults([]);
       SetSuggestions([]);
       throtleAlias(searchVal, 0);
@@ -75,7 +71,6 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
       )}
       options={suggestions}
       onInputChange={(event, newInputValue) => {
-        console.log(`new input: ${newInputValue}`);
         if (newInputValue !== "") {
           SetSearchVal(newInputValue);
           throtleAlias(newInputValue);
@@ -84,7 +79,6 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
         }
       }}
       onChange={(event, newValue, reason) => {
-        console.log(`onChange val ${newValue} reason ${reason}`);
       }}
       isOptionEqualToValue={(option, value) => option.sys_id === value.sys_id}
       getOptionLabel={(option) => option.documentname}
@@ -94,9 +88,6 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
       clearOnEscape={false}
       includeInputInList={false}
       renderOption={(props, option: any) => {
-        console.log(option);
-        console.log(props);
-        console.log(option.sys_id);
 
         // key option.sys_id
         return (

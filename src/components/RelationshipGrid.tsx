@@ -4,84 +4,99 @@ import { DataGrid, GridApi, GridCellValue, GridColDef, GridFooter, GridFooterCon
 import IRelationships from "../interfaces/IRelationships";
 import { Button, IconButton } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { GetRelationships } from "../RelationshipControllerApi";
-const columns: GridColDef[] = [
-  {field: "__check__", hide: true},
-  {
-    field: "action",
-    headerName: "",
-    width: 20,
-    sortable: false,
-    renderCell: (params) => {
-      const onClick = () => {
-        const api: GridApi = params.api;
-        const fields = api
-          .getAllColumns()
-          .map((c) => c.field)
-          .filter((c) => c !== "__check__" && !!c);
-        const thisRow: any = {};
+import { DeleteRelations, GetRelationships } from "../RelationshipControllerApi";
+    type Props = {
+      relationships: IRelationships[]
+      reloadRelationships: () => void;
+    };
     
-        fields.forEach((f) => {
-          thisRow[f] = params.getValue(params.id, f);
-        });
-    
-        return alert(JSON.stringify(thisRow, null, 4));
-      };
-
-      return <IconButton aria-label="delete" onClick={onClick}>
-        <DeleteIcon />
-      </IconButton>;
-    }
-  },
-  { field: "id", headerName: "id", width: 90, hide: true },
+const RelationshipGrid: React.FC<Props>  = ({relationships, reloadRelationships}) => {
+  const columns: GridColDef[] = [
+    {field: "__check__", hide: true},
     {
-      field: "leftNodeName",
-      headerName: "Left page",
-      editable: true,
+      field: "action",
+      headerName: "",
+      width: 20,
+      sortable: false,
+      renderCell: (params) => {
+        const onClick = () => {
+          const api: GridApi = params.api;
+          const fields = api
+            .getAllColumns()
+            .map((c) => c.field)
+            .filter((c) => c !== "__check__" && !!c);
+          const thisRow: any = {};
+      
+          fields.forEach((f) => {
+            thisRow[f] = params.getValue(params.id, f);
+          });
+          console.log(thisRow.leftNodeId);
+          (async () => {
+            var t = await DeleteRelations(thisRow.leftNodeId, thisRow.rightNodeId, thisRow.relationshipNameId);
+            if(t.status === 200) {
+              reloadRelationships()
+            }
+          })();        
+          //return alert(JSON.stringify(thisRow));
+        };
+  
+        return <IconButton aria-label="delete" onClick={onClick}>
+          <DeleteIcon />
+        </IconButton>;
+      }
     },
-
-    {
-      field: "leftPageType",
-      headerName: "Left page type",
-      editable: true,
-    },
-    {
-      field: "relationshipName",
-      headerName: "Relationship name",
-      description: "Display all related pages.",
-      sortable: true,
-    },
-    {
-        field: "rightNodeName",
-        headerName: "Right page",
+    { field: "id", headerName: "id", width: 90, hide: true },
+      {
+        field: "leftNodeName",
+        headerName: "Left page",
+        editable: true,
+      },
+  
+      {
+        field: "leftPageType",
+        headerName: "Left page type",
         editable: true,
       },
       {
-        field: "rightPageType",
-        headerName: "Right page type",
-        editable: true,
+        field: "relationshipName",
+        headerName: "Relationship name",
+        description: "Display all related pages.",
+        sortable: true,
       },
-    ];
-    type Props = {
-      reload: boolean
-    };
-    
-const RelationshipGrid: React.FC<Props>  = ({reload}) => {
-
-  const [relationships, setRelationships] = useState<IRelationships[]>([]);    
-  useEffect(() => {
-      let mounted = true;
-      (async () => {
-        const res = await GetRelationships();
-        if (mounted) {
-          // only try to update if we are subscribed (or mounted)
-          setRelationships(res);
-        }
-      })();
-      return () =>{ mounted = false; }// cleanup function    
-      },[reload]);
-      // {      isMounted.current = false;    };  }, []);  
-  // const relationships = [
+      {
+          field: "rightNodeName",
+          headerName: "Right page",
+          editable: true,
+        },
+        {
+          field: "rightPageType",
+          headerName: "Right page type",
+          editable: true,
+        },
+        {
+          field: "relationships",
+          headerName: "Direct relations",
+          description: "Display all related pages.",
+          sortable: true,
+          width: 300,
+        },
+        {
+          field: "leftNodeId",
+          headerName: "leftNodeId",
+          hide: true,
+        },
+        {
+          field: "rightNodeId",
+          headerName: "rightNodeId",
+          hide: true,
+        },
+        {
+          field: "relationshipNameId",
+          headerName: "relationshipNameId",
+          hide: true,
+        },
+  ];
+    // const relationships = [
   //   {
   //       "id": "7d5e9b8a-97b1-48bf-b965-819a5c86f65a",
   //       "leftNodeId": 121,

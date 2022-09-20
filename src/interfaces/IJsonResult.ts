@@ -1,4 +1,4 @@
 export interface IJsonResult {
-    statuscode: number,//  200ok
-    error: string
+    status: number//  200ok
+    statusText: string
 };

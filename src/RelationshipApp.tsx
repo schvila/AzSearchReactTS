@@ -1,23 +1,38 @@
 import SearchAsync from './components/search/SearchAsync';
 import ResultGrid from './components/search/ResultGrid';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import IAZDocument from './interfaces/IAZDocument';
-import {AddRelations} from './RelationshipControllerApi';
+import {AddRelations, GetRelationships} from './RelationshipControllerApi';
 import RelationshipGrid from './components/RelationshipGrid';
+import IRelationships from './interfaces/IRelationships';
 function  RelationshipApp() {
-  console.log('async call to add relations');
-/*  
-  (async () => {
-    var t = await AddRelations();
-    console.log({asyncres: t});
-    
-  })();
- */   
-  
+
   const defMargin = 10;
-  const [results, setResults] = React.useState<IAZDocument[]>([]);
-  const [reload, setReload] = React.useState<boolean>(true);
-  //GetRelationships();
+  const [results, setResults] = useState<IAZDocument[]>([]);
+  const [reload, setReload] = useState<boolean>(true);
+
+  const [relationships, setRelationships] = useState<IRelationships[]>([]);  
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const res = await GetRelationships();
+      if (mounted) {
+        // only try to update if we are subscribed (or mounted)
+        setRelationships(res);
+      }
+    })();
+    return () =>{ mounted = false; }// cleanup function    
+    },[]);  
+  
+  // (async () => {
+  //   const res = await GetRelationships();
+  //   setRelationships(res);
+  //   console.log('setRelationships')
+  // })();
+    const  ReloadRelationships = async () => {
+      const res = await GetRelationships();
+      setRelationships(res);
+    }
 
   return (
     <div 
@@ -26,10 +41,10 @@ function  RelationshipApp() {
           <SearchAsync setResults={setResults} />
         </div>
         <div>
-        <ResultGrid results={results} />
+        <ResultGrid results={results} reloadRelationships={ReloadRelationships}/>
         </div>
         <div>
-          <RelationshipGrid reload={reload} />
+          <RelationshipGrid relationships={relationships} reloadRelationships={ReloadRelationships} />
         </div>
    </div>
   );
