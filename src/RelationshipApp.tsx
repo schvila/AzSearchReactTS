@@ -6,13 +6,13 @@ import {AddRelations} from './RelationshipControllerApi';
 import RelationshipGrid from './components/RelationshipGrid';
 function  RelationshipApp() {
   console.log('async call to add relations');
-  
+/*  
   (async () => {
     var t = await AddRelations();
     console.log({asyncres: t});
     
   })();
-    
+ */   
   
   const defMargin = 10;
   const [results, setResults] = React.useState<IAZDocument[]>([]);

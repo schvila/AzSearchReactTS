@@ -7,6 +7,8 @@ import { Stack } from "@mui/system";
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
+import { AddRelations } from "../../RelationshipControllerApi";
+
 const columns: GridColDef[] = [
   { field: "id", headerName: "id", width: 90, hide: true },
   {
@@ -44,23 +46,58 @@ const ResultGrid: React.FC<Props> = ({results}) => {
   item.id = item.sys_id});
   console.log({resultpar: results});
   const [relType, setRelType] = React.useState('');
-
-  let rowsData: any[];
-  const handleClickButton = () => {
+  const [rowsData, setRowsData] = React.useState<any[]>([]);
+  //const [addIsDisabled, setAddIsDisabled] = React.useState(true);
+  //let rowsData: any[] = [];
+  
+  const handleAddSelected = () => {
     console.log(rowsData);
+    let rightNodes = '';
+    rowsData.forEach((item)=>
+    {
+      rightNodes += item.nodeid + ','
+    })
+    console.log(
+      {
+        relName:relType,
+        rightNodes: rightNodes
+      });
+      // (async () => {
+      //   var t = await AddRelations(relType, rightNodes);
+      //   console.log({asyncres: t});
+        
+      // })();
+          
   };
 
+  function checkDisabledButton(){
+    console.log(
+      {relType:relType,
+        rows: rowsData.length
+        });
+    
+    if(relType == "" || rowsData.length == 0) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  };
+  let addIsDisabled = checkDisabledButton();
+  console.log(
+    {relType:relType,
+      rows: rowsData.length
+      });
+//checkDisabledButton();
   const selectionChanged = (items: any[]) => {
     
-    console.log(items);
-    rowsData = items.map((id) => results.find((row)=> row.id === id));
-    console.log(rowsData);
-    
-    //setResults(rowsData)
-  };
+    console.log({selChaged: items});
+    let rd  = items.map((id) => results.find((row)=> row.id === id));
+    console.log(rd);
+    setRowsData(rd);
+   };
   const relationTypeChanged = (event: SelectChangeEvent) => {
     setRelType(event.target.value);
-
   }
   function CustomFooter () {
     return (
@@ -90,8 +127,8 @@ const ResultGrid: React.FC<Props> = ({results}) => {
         <Button
           sx={{height:'2em'}} 
           variant="contained"
-          
-          onClick={handleClickButton}>Add Selected</Button>
+          disabled={addIsDisabled}
+          onClick={handleAddSelected}>Add Selected</Button>
       </Stack>
       <GridFooter sx={{
         border: 'none', // To delete double border.

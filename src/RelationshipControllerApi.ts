@@ -1,5 +1,6 @@
 import axios from "axios";
 import { json } from "stream/consumers";
+import { IJsonResult } from "./interfaces/IJsonResult";
 import IRelationships from "./interfaces/IRelationships";
 
 export  async function GetRelationships() : Promise<IRelationships[]> {
@@ -27,7 +28,7 @@ export  async function GetRelationships() : Promise<IRelationships[]> {
 
 }
 
-export  async function AddRelations(): Promise<string> {
+export  async function AddRelations(relationshipName: string, rightNodes: string ): Promise<IJsonResult> {
   const formName = 'relationshipAddForm'
 
     const formElement = window.document.getElementById(formName);
@@ -40,8 +41,8 @@ export  async function AddRelations(): Promise<string> {
     .namedItem('__Kentico_DC_Page') as HTMLInputElement;
     const formAction = formElement.getAttribute('action') as string;
     const data = {
-      relationshipName: 'rel name',
-      rightNodes: '1,2,5,6,9',
+      relationshipName: relationshipName,
+      rightNodes: rightNodes,
     }
     const sd = JSON.stringify(data);
     let response = await axios.put(formAction,
@@ -52,5 +53,5 @@ export  async function AddRelations(): Promise<string> {
         },
       });
       console.log({response: response});
-      return response.statusText;
+      return response.data.value;
 }

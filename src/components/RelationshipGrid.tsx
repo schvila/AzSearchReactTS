@@ -1,9 +1,10 @@
-import React, {useEffect} from "react"; //, useState
+import React, {useEffect, useState} from "react"; //, useState
 import Box from "@mui/material/Box";
 import { DataGrid, GridApi, GridCellValue, GridColDef, GridFooter, GridFooterContainer, GridRenderCellParams } from "@mui/x-data-grid";
 import IRelationships from "../interfaces/IRelationships";
 import { Button, IconButton } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { GetRelationships } from "../RelationshipControllerApi";
 const columns: GridColDef[] = [
   {field: "__check__", hide: true},
   {
@@ -67,51 +68,47 @@ const columns: GridColDef[] = [
     
 const RelationshipGrid: React.FC<Props>  = ({reload}) => {
 
-  //const [relationships, setRelationships] = useState<IRelationships[]>([]);    
+  const [relationships, setRelationships] = useState<IRelationships[]>([]);    
   useEffect(() => {
       let mounted = true;
-      // (async () => {
-      //   const res = await fetch('example.com');
-      //   if (mounted) {
-      //     // only try to update if we are subscribed (or mounted)
-      //     setRelationships(res);
-      //   }
-      // })();
+      (async () => {
+        const res = await GetRelationships();
         if (mounted) {
           // only try to update if we are subscribed (or mounted)
-          console.count('Relationship grid reload called');
+          setRelationships(res);
         }
+      })();
       return () =>{ mounted = false; }// cleanup function    
       },[reload]);
       // {      isMounted.current = false;    };  }, []);  
-  const relationships = [
-    {
-        "id": "7d5e9b8a-97b1-48bf-b965-819a5c86f65a",
-        "leftNodeId": 121,
-        "leftNodeName": "Incubator shakers overview",
-        "relationshipName": "RelatesTo",
-        "relationshipNameId": 3,
-        "rightNodeId": 119,
-        "rightNodeName": "Multitron 4 CH info",
-        "leftClassId": 0,
-        "rightClassId": 0,
-        "leftPageType": null,
-        "rightPageType": null
-    },
-    {
-        "id": "1464c0f7-2270-4952-9dc4-560ef438027f",
-        "leftNodeId": 121,
-        "leftNodeName": "Incubator shakers overview",
-        "relationshipName": "DependsOn",
-        "relationshipNameId": 4,
-        "rightNodeId": 106,
-        "rightNodeName": "relationships test",
-        "leftClassId": 0,
-        "rightClassId": 0,
-        "leftPageType": null,
-        "rightPageType": null
-    }
-  ];       
+  // const relationships = [
+  //   {
+  //       "id": "7d5e9b8a-97b1-48bf-b965-819a5c86f65a",
+  //       "leftNodeId": 121,
+  //       "leftNodeName": "Incubator shakers overview",
+  //       "relationshipName": "RelatesTo",
+  //       "relationshipNameId": 3,
+  //       "rightNodeId": 119,
+  //       "rightNodeName": "Multitron 4 CH info",
+  //       "leftClassId": 0,
+  //       "rightClassId": 0,
+  //       "leftPageType": null,
+  //       "rightPageType": null
+  //   },
+  //   {
+  //       "id": "1464c0f7-2270-4952-9dc4-560ef438027f",
+  //       "leftNodeId": 121,
+  //       "leftNodeName": "Incubator shakers overview",
+  //       "relationshipName": "DependsOn",
+  //       "relationshipNameId": 4,
+  //       "rightNodeId": 106,
+  //       "rightNodeName": "relationships test",
+  //       "leftClassId": 0,
+  //       "rightClassId": 0,
+  //       "leftPageType": null,
+  //       "rightPageType": null
+  //   }
+  // ];       
   return (
     <Box sx={{ width: "100%" }}>
       <DataGrid
