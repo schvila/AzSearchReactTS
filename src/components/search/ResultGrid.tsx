@@ -7,6 +7,8 @@ import { Stack } from "@mui/system";
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
+import { AddRelations } from "../../RelationshipControllerApi";
+
 const columns: GridColDef[] = [
   { field: "id", headerName: "id", width: 90, hide: true },
   {
@@ -37,30 +39,47 @@ const columns: GridColDef[] = [
 ];
 type Props = {
   results: IAZDocument[]
+  reloadRelationships: () => void;
 };
 
-const ResultGrid: React.FC<Props> = ({results}) => {
+const ResultGrid: React.FC<Props> = ({results, reloadRelationships}) => {
   results.map(item=>{
   item.id = item.sys_id});
-  console.log({resultpar: results});
-  const [relType, setRelType] = React.useState('');
 
-  let rowsData: any[];
-  const handleClickButton = () => {
-    console.log(rowsData);
+  const [relType, setRelType] = React.useState('');
+  const [rowsData, setRowsData] = React.useState<any[]>([]);
+  
+  const handleAddSelected = () => {
+    let rightNodes = '';
+    rowsData.forEach((item)=>
+    {
+      rightNodes += item.nodeid + ','
+    });
+    (async () => {
+      var t = await AddRelations(relType, rightNodes);
+      if(t.status === 200) {
+        reloadRelationships()
+      }
+    })();
   };
+
+  function checkDisabledButton(){
+    if(relType == "" || rowsData.length == 0) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  };
+  let addIsDisabled = checkDisabledButton();
 
   const selectionChanged = (items: any[]) => {
     
-    console.log(items);
-    rowsData = items.map((id) => results.find((row)=> row.id === id));
-    console.log(rowsData);
-    
-    //setResults(rowsData)
-  };
+    let rd  = items.map((id) => results.find((row)=> row.id === id));
+    setRowsData(rd);
+   };
   const relationTypeChanged = (event: SelectChangeEvent) => {
     setRelType(event.target.value);
-
   }
   function CustomFooter () {
     return (
@@ -90,8 +109,8 @@ const ResultGrid: React.FC<Props> = ({results}) => {
         <Button
           sx={{height:'2em'}} 
           variant="contained"
-          
-          onClick={handleClickButton}>Add Selected</Button>
+          disabled={addIsDisabled}
+          onClick={handleAddSelected}>Add Selected</Button>
       </Stack>
       <GridFooter sx={{
         border: 'none', // To delete double border.
@@ -100,7 +119,7 @@ const ResultGrid: React.FC<Props> = ({results}) => {
     );
   }  
 return (
-    <Box sx={{ height: 400, width: "100%" }}>
+    <Box sx={{ width: "100%" }}>
       <DataGrid
         rows={results}
         columns={columns}
@@ -110,7 +129,13 @@ return (
         experimentalFeatures={{ newEditingApi: true }}
         onSelectionModelChange={selectionChanged}
         components={{Footer: CustomFooter}}
-      />
+        initialState={{
+          pagination: {
+            pageSize: 10,
+          },
+        }}
+        pageSize={5}
+        autoHeight={true}      />
     </Box>
   );
 }
