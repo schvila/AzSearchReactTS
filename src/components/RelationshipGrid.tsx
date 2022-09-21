@@ -50,35 +50,33 @@ const RelationshipGrid: React.FC<Props>  = ({relationships, reloadRelationships}
         field: "leftNodeName",
         headerName: "Left page",
         editable: true,
+        width:200,
       },
   
       {
         field: "leftPageType",
         headerName: "Left page type",
         editable: true,
+        width:200,
       },
       {
         field: "relationshipName",
         headerName: "Relationship name",
         description: "Display all related pages.",
         sortable: true,
+        width:200,
       },
       {
           field: "rightNodeName",
           headerName: "Right page",
           editable: true,
+          width:200,
         },
         {
           field: "rightPageType",
           headerName: "Right page type",
           editable: true,
-        },
-        {
-          field: "relationships",
-          headerName: "Direct relations",
-          description: "Display all related pages.",
-          sortable: true,
-          width: 300,
+          width:200,
         },
         {
           field: "leftNodeId",
@@ -129,6 +127,7 @@ const RelationshipGrid: React.FC<Props>  = ({relationships, reloadRelationships}
       <DataGrid
         rows={relationships}
         columns={columns}
+        getRowHeight={()=> 'auto'}
         rowsPerPageOptions={[5, 10, 15,100]}
         checkboxSelection
         disableSelectionOnClick

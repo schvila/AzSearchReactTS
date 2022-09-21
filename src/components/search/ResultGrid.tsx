@@ -8,6 +8,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import { AddRelations } from "../../RelationshipControllerApi";
+import type {} from '@mui/x-data-grid/themeAugmentation';
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "id", width: 90, hide: true },
@@ -122,6 +123,7 @@ return (
     <Box sx={{ width: "100%" }}>
       <DataGrid
         rows={results}
+        getRowHeight={()=> 'auto'}
         columns={columns}
         rowsPerPageOptions={[5, 10, 15,100]}
         checkboxSelection
