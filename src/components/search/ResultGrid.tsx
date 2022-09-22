@@ -42,6 +42,7 @@ type Props = {
   results: IAZDocument[]
   reloadRelationships: () => void;
 };
+const menuItems = ["RelatesTo", "DependsOn","ContinuedBy", "ReplacedBy", "SuperseededBy"];
 
 const ResultGrid: React.FC<Props> = ({results, reloadRelationships}) => {
   results.map(item=>{
@@ -101,11 +102,11 @@ const ResultGrid: React.FC<Props> = ({results, reloadRelationships}) => {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            <MenuItem value="RelatesTo">RelatesTo</MenuItem>
-            <MenuItem value="DependsOn">DependsOn</MenuItem>
-            <MenuItem value="ContinuedBy">ContinuedBy</MenuItem>
-            <MenuItem value="ReplacedBy">ReplacedBy</MenuItem>
-            <MenuItem value="SuperseededBy">SuperseededBy</MenuItem>
+            {
+              menuItems.map((item)=>{
+                return <MenuItem value={item}>{item}</MenuItem>
+              })
+            }
         </Select>
         <Button
           sx={{height:'2em'}} 
