@@ -6,29 +6,30 @@ import IRelationships from './interfaces/IRelationships';
 const formPartialName = relConfiguration().formPartialName;
 
 export async function GetRelationships(): Promise<IRelationships[]> {
-  const formName = formPartialName.replace('__', 'Get'); //relationshipGetForm'
+  return [];
+  // const formName = formPartialName.replace('__', 'Get'); //relationshipGetForm'
 
-  const formElement = window.document.getElementById(formName);
-  if (!formElement) {
-    console.error('Save failed. Form not found', formName);
-    throw new Error(`Save failed. Form "${formName}" not found`);
-  }
-  const dcPageField: HTMLInputElement | undefined = formElement
-    .getElementsByTagName('input')
-    .namedItem('__Kentico_DC_Page') as HTMLInputElement;
-  const formAction = formElement.getAttribute('action') as string;
+  // const formElement = window.document.getElementById(formName);
+  // if (!formElement) {
+  //   console.error('Save failed. Form not found', formName);
+  //   throw new Error(`Save failed. Form "${formName}" not found`);
+  // }
+  // const dcPageField: HTMLInputElement | undefined = formElement
+  //   .getElementsByTagName('input')
+  //   .namedItem('__Kentico_DC_Page') as HTMLInputElement;
+  // const formAction = formElement.getAttribute('action') as string;
 
-  const response = await axios.post(
-    formAction,
-    { __Kentico_DC_Page: dcPageField.value },
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    },
-  );
+  // const response = await axios.post(
+  //   formAction,
+  //   { __Kentico_DC_Page: dcPageField.value },
+  //   {
+  //     headers: {
+  //       'Content-Type': 'multipart/form-data',
+  //     },
+  //   },
+  //);
   //console.log({relations: response.data.value});
-  return response.data.value;
+  //return response.data.value;
 }
 
 export async function AddRelations(relationshipName: string, rightNodes: string): Promise<IJsonResult> {

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import RelationshipAppCollapsible from './RelationshipAppCollapsible';
+import RelationshipApp from './RelationshipApp';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
@@ -8,7 +8,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <RelationshipAppCollapsible />
+    <RelationshipApp />
   </React.StrictMode>,
 );
 

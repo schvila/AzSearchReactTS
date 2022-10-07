@@ -43,7 +43,7 @@ module.exports = {
     },
   },
   rules: {
-    'no-console': ['error', { allow: ['warn', 'error'] }],
+    'no-console': "off",
     'no-alert': 'error',
     'import/order': [
       'error',

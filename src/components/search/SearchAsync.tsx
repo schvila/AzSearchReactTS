@@ -66,7 +66,14 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
       getOptionLabel={(option) => option.documentname}
       includeInputInList={false}
       isOptionEqualToValue={(option, value) => option.sys_id === value.sys_id}
-      // onChange={(event, newValue, reason) => {}}
+      onChange={(event, newValue) => {
+        const val = newValue?.documentname;
+        if( val !== undefined && val !== ''){
+          props.setResults([]);
+          SetSuggestions([]);
+          throtleAlias(val, 0);
+            }
+      }}
       onInputChange={(event, newInputValue) => {
         if (newInputValue !== '') {
           SetSearchVal(newInputValue);
