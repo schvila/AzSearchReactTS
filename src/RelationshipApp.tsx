@@ -9,6 +9,8 @@ function RelationshipApp() {
   const [results, setResults] = useState<IAZDocument[]>([]);
 
   const [relationships, setRelationships] = useState<IRelationships[]>([]);
+  console.log(window.location);
+  
   useEffect(() => {
     let mounted = true;
     (async () => {
