@@ -51,11 +51,15 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
 
   const handleOnKeyDown = (event: any) => {
     if (event.key === 'Enter') {
-      props.setResults([]);
-      SetSuggestions([]);
-      throtleAlias(searchVal, 0);
+      resultSearch(searchVal);
     }
   };
+  const resultSearch = (text: string) => {
+    props.setResults([]);
+    SetSuggestions([]);
+    throtleAlias(text, 0);
+
+  }
   const throtleAlias = throttle(searchAZ, 500);
   return (
     <Autocomplete
@@ -69,9 +73,7 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
       onChange={(event, newValue) => {
         const val = newValue?.documentname;
         if( val !== undefined && val !== ''){
-          props.setResults([]);
-          SetSuggestions([]);
-          throtleAlias(val, 0);
+          resultSearch(val);
             }
       }}
       onInputChange={(event, newInputValue) => {

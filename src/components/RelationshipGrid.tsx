@@ -100,11 +100,11 @@ const RelationshipGrid: React.FC<Props> = ({ relationships, reloadRelationships 
     <Box sx={{ width: '100%' }}>
       <DataGrid
         autoHeight={true}
-        checkboxSelection
         columns={columns}
         disableSelectionOnClick
         experimentalFeatures={{ newEditingApi: true }}
         getRowHeight={() => 'auto'}
+        checkboxSelection
         pageSize={10}
         rows={relationships}
         rowsPerPageOptions={[5, 10, 15, 100]}

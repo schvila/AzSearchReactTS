@@ -119,12 +119,12 @@ const ResultGrid: React.FC<Props> = ({ results, reloadRelationships }) => {
     <Box sx={{ width: '100%' }}>
       <DataGrid
         autoHeight={true}
-        checkboxSelection
         columns={columns}
         components={{ Footer: CustomFooter }}
         disableSelectionOnClick
         experimentalFeatures={{ newEditingApi: true }}
         getRowHeight={() => 'auto'}
+        checkboxSelection
         onSelectionModelChange={selectionChanged}
         pageSize={10}
         rows={results}
