@@ -1,7 +1,7 @@
 import { Autocomplete, Grid, TextField } from '@mui/material';
+import axios from 'axios';
 import { throttle } from 'lodash';
 import React, { useState } from 'react';
-import myConfig from '../../Config';
 import IAZDocument from '../../interfaces/IAZDocument';
 
 type Props = {
@@ -13,39 +13,42 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
   const [searchVal, SetSearchVal] = useState<string>('');
 
   const searchAZ = async (value: string, top = 10) => {
-    const bodyBase = {
-      count: true,
-      queryType: 'full',
-      search: `${value}`,
-      searchFields: 'documentname,title,relationships',
-      select: 'documentname,title,relationships, sys_id,nodeguid,sys_site,documentid,nodeid',
-    };
-    let body;
-    if (top > 0) {
-      body = { top: top, ...bodyBase };
-    } else {
-      body = bodyBase;
-    }
-    const config = myConfig();
-    const qbody = JSON.stringify(body);
-    const response = await fetch(
-      `${config.searchUrl}/indexes/${config.indexName}/docs/search?api-version=2021-04-30-Preview`,
-      {
-        body: qbody,
-        headers: {
-          'api-key': config.apikey,
-          'Content-Type': 'application/json',
-        },
-        method: 'POST',
-      },
-    );
+    ///////////////////////////////Direct AZ version
+    // const bodyBase = {
+    //   count: true,
+    //   queryType: 'full',
+    //   search: `${value}`,
+    //   searchFields: 'documentname,title,relationships',
+    //   select: 'documentname,title,relationships, sys_id,nodeguid,sys_site,documentid,nodeid',
+    // };
+    // let body;
+    // if (top > 0) {
+    //   body = { top: top, ...bodyBase };
+    // } else {
+    //   body = bodyBase;
+    // }
+    // const config = myConfig();
+    // const qbody = JSON.stringify(body);
+    // const response = await fetch(
+    //   `${config.searchUrl}/indexes/${config.indexName}/docs/search?api-version=2021-04-30-Preview`,
+    //   {
+    //     body: qbody,
+    //     headers: {
+    //       'api-key': config.apikey,
+    //       'Content-Type': 'application/json',
+    //     },
+    //     method: 'POST',
+    //   },
+    // );
+    /////////////////////////// MVC AzSearch https://localhost:44381  axios.get(`${window.location.origin}/AzureSearch?${value}`);
+    const response = await axios.get(`https://localhost:44381/AzureSearch?${value}`);
 
-    const finalData = await response.json();
+    //const finalData = await response.json();
 
     if (top === 0) {
-      props.setResults(finalData.value);
+      props.setResults(response.data.value);
     } else {
-      SetSuggestions(finalData.value);
+      SetSuggestions(response.data.value);
     }
   };
 
@@ -58,7 +61,6 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
     props.setResults([]);
     SetSuggestions([]);
     throtleAlias(text, 0);
-
   }
   const throtleAlias = throttle(searchAZ, 500);
   return (

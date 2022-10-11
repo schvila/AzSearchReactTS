@@ -1,9 +1,14 @@
 import axios from 'axios';
-import relConfiguration from './Config';
 import { IJsonResult } from './interfaces/IJsonResult';
+import IRelationshipNameInfo from './interfaces/IRelationshipNameInfo';
 import IRelationships from './interfaces/IRelationships';
 
-const formPartialName = relConfiguration().formPartialName;
+const formPartialName = "PageRelationship__Form";
+
+export async function  GetRelationshipNames(): Promise<IRelationshipNameInfo[]> {
+  const response = await axios.get('https://localhost:44381/RelationshipNames');
+  return response.data;
+}
 
 export async function GetRelationships(): Promise<IRelationships[]> {
   return [];
