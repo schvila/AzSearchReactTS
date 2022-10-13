@@ -72,6 +72,7 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
       getOptionLabel={(option) => option.documentname}
       includeInputInList={false}
       isOptionEqualToValue={(option, value) => option.sys_id === value.sys_id}
+      noOptionsText={''}
       onChange={(event, newValue) => {
         const val = newValue?.documentname;
         if( val !== undefined && val !== ''){
