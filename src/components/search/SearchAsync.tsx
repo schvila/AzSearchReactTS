@@ -41,7 +41,7 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
     //   },
     // );
     /////////////////////////// MVC AzSearch https://localhost:44381  axios.get(`${window.location.origin}/AzureSearch?${value}`);
-    const response = await axios.get(`https://localhost:44381/AzureSearch?${value}`);
+    const response = await axios.get(`/AzureSearch?searchTerm=${value}`); //http://localhost:58585
 
     //const finalData = await response.json();
 
