@@ -11,6 +11,14 @@ type Props = {
 const SearchAsync: React.FC<Props> = (props: Props) => {
   const [suggestions, SetSuggestions] = useState<IAZDocument[]>([]);
   const [searchVal, SetSearchVal] = useState<string>('');
+  const addSearchVal = (azDocs: IAZDocument[], val: string) =>  {
+    if(azDocs !== null && azDocs.length > 0) {
+      const arr = [{documentname:val, sys_id:val},...azDocs];
+      console.log(arr);
+      console.log({azDocsLen: azDocs.length}, val);
+    }
+  }
+  
 
   const searchAZ = async (value: string, top = 10) => {
     ///////////////////////////////Direct AZ version
@@ -48,6 +56,7 @@ const SearchAsync: React.FC<Props> = (props: Props) => {
     if (top === 0) {
       props.setResults(response.data.value);
     } else {
+      addSearchVal(response.data.value, value)
       SetSuggestions(response.data.value);
     }
   };
